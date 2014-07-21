@@ -11,6 +11,7 @@
 
 int inPin = 2;         // the number of the input pin
 int outPin = 13;       // the number of the output pin
+int buzzerPin = 9;
 
 int state = HIGH;      // the current state of the output pin
 int reading;           // the current reading from the input pin
@@ -26,8 +27,10 @@ long debounceInterval = 200;   // the debounce time, increase if the output flic
 long debounceStart = 0;  // the last time the output pin was toggled
 long pomodoroStart = 0;
 long breakStart = 0;
-long pomodoroTime = 1500000; // 25 minutes
-long breakTime = 300000; // 5 minutes
+// long pomodoroTime = 1500000; // 25 minutes
+long pomodoroTime = 5000; // 5 seconds
+// long breakTime = 300000; // 5 minutes
+long breakTime = 5000; // 10 second
 boolean onBreak = false;
 boolean onPomodoro = false;
 
@@ -36,6 +39,7 @@ void setup()
 {
   pinMode(inPin, INPUT);
   pinMode(outPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
 }
 
 void loop()
@@ -51,6 +55,7 @@ void loop()
   }
 
   if (onBreak == true) {
+    tone(buzzerPin, 262);
     long currentMillis = millis();
     if (currentMillis - lastBlink > blinkInterval) {
       lastBlink = currentMillis;
@@ -60,6 +65,7 @@ void loop()
         state = LOW;
     }
     if (millis() - breakStart > breakTime) {
+      noTone(buzzerPin);
       onBreak = false;
       state = LOW;
     }
@@ -71,6 +77,7 @@ void loop()
   // the time
   if (reading == HIGH && previous == LOW && millis() - debounceStart > debounceInterval) {
     if (onPomodoro == true || onBreak == true) {
+      noTone(buzzerPin);
       state = LOW;
       onPomodoro = false;
       onBreak = false;
