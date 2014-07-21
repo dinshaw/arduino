@@ -23,11 +23,11 @@ long blinkInterval = 500;
 long lastBlink = 0;
 
 long debounceInterval = 200;   // the debounce time, increase if the output flickers
-long debounceStart = 0;         // the last time the output pin was toggled
+long debounceStart = 0;  // the last time the output pin was toggled
 long pomodoroStart = 0;
 long breakStart = 0;
-long pomodoroTime = 5000; // 10 seconds
-long breakTime = 10000; //  1500000 25 minutes
+long pomodoroTime = 1500000; // 25 minutes
+long breakTime = 300000; // 5 minutes
 boolean onBreak = false;
 boolean onPomodoro = false;
 
