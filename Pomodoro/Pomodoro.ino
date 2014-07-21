@@ -27,10 +27,10 @@ long debounceInterval = 200;   // the debounce time, increase if the output flic
 long debounceStart = 0;  // the last time the output pin was toggled
 long pomodoroStart = 0;
 long breakStart = 0;
-// long pomodoroTime = 1500000; // 25 minutes
-long pomodoroTime = 5000; // 5 seconds
-// long breakTime = 300000; // 5 minutes
-long breakTime = 5000; // 10 second
+long pomodoroTime = 1500000; // 25 minutes
+// long pomodoroTime = 5000; // 5 seconds
+long breakTime = 300000; // 5 minutes
+// long breakTime = 5000; // 10 second
 boolean onBreak = false;
 boolean onPomodoro = false;
 
