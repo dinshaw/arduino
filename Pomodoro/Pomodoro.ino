@@ -28,8 +28,8 @@ long debounceStart = 0;  // the last time the output pin was toggled
 long pomodoroStart = 0;
 long breakStart = 0;
 long pomodoroTime = 1500000; // 25 minutes
-// long pomodoroTime = 5000; // 5 seconds
 long breakTime = 300000; // 5 minutes
+// long pomodoroTime = 5000; // 5 seconds
 // long breakTime = 5000; // 10 second
 boolean onBreak = false;
 boolean onPomodoro = false;
@@ -49,13 +49,10 @@ void loop()
 
   // if the time has run out, turn the light off
   if (onPomodoro == true && millis() - pomodoroStart > pomodoroTime) {
-    onBreak = true;
-    onPomodoro = false;
-    breakStart = millis();
+    start_break();
   }
 
   if (onBreak == true) {
-    tone(buzzerPin, 262);
     long currentMillis = millis();
     if (currentMillis - lastBlink > blinkInterval) {
       lastBlink = currentMillis;
@@ -65,9 +62,7 @@ void loop()
         state = LOW;
     }
     if (millis() - breakStart > breakTime) {
-      noTone(buzzerPin);
-      onBreak = false;
-      state = LOW;
+      end_break();
     }
   }
 
@@ -77,16 +72,11 @@ void loop()
   // the time
   if (reading == HIGH && previous == LOW && millis() - debounceStart > debounceInterval) {
     if (onPomodoro == true || onBreak == true) {
-      noTone(buzzerPin);
-      state = LOW;
-      onPomodoro = false;
-      onBreak = false;
+      stop_pomodoro();
     }
     else
     {
-      state = HIGH;
-      onPomodoro = true;
-      pomodoroStart = millis();
+      start_pomodoro();
     }
 
     debounceStart = millis();
@@ -96,3 +86,57 @@ void loop()
 
   previous = reading;
 }
+
+void start_pomodoro() {
+  play_start_tone();
+  state = HIGH;
+  onPomodoro = true;
+  pomodoroStart = millis();
+}
+
+void stop_pomodoro() {
+  play_cancel_tone();
+  state = LOW;
+  onPomodoro = false;
+  onBreak = false;
+}
+
+void start_break() {
+  play_break_start_tone();
+  onBreak = true;
+  onPomodoro = false;
+  breakStart = millis();
+}
+
+void end_break() {
+  play_break_end_tone();
+  onBreak = false;
+  state = LOW;
+}
+
+void play_start_tone() {
+  tone(buzzerPin, 1014, 500);
+  delay(500);
+  tone(buzzerPin, 1136, 500);
+  delay(500);
+  tone(buzzerPin, 1275, 500);
+}
+
+void play_cancel_tone() {
+  tone(buzzerPin, 500, 1000);
+}
+
+void play_break_start_tone() {
+  tone(buzzerPin, 1275, 500);
+  delay(500);
+  tone(buzzerPin, 1136, 500);
+  delay(500);
+  tone(buzzerPin, 1275, 500);
+}
+
+void play_break_end_tone() {
+  tone(buzzerPin, 1136, 500);
+  delay(500);
+  tone(buzzerPin, 1275, 500);
+}
+
