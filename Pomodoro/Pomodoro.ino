@@ -35,11 +35,18 @@ boolean onBreak = false;
 boolean onPomodoro = false;
 
 
+int RED_PIN = 7;
+int GREEN_PIN = 6;
+int BLUE_PIN = 5;
+
 void setup()
 {
   pinMode(inPin, INPUT);
   pinMode(outPin, OUTPUT);
   pinMode(buzzerPin, OUTPUT);
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
 }
 
 void loop()
@@ -48,8 +55,22 @@ void loop()
   state = digitalRead(outPin);
 
   // if the time has run out, turn the light off
-  if (onPomodoro == true && millis() - pomodoroStart > pomodoroTime) {
-    start_break();
+  if (onPomodoro == true) {
+    if (millis() - pomodoroStart > pomodoroTime) {
+      start_break();
+    } else if (millis() - pomodoroStart > pomodoroTime/3*2) {
+      digitalWrite(RED_PIN, HIGH);
+      digitalWrite(GREEN_PIN, LOW);
+      digitalWrite(BLUE_PIN, LOW);
+    } else if (millis() - pomodoroStart > pomodoroTime/3 ) {
+      digitalWrite(RED_PIN, LOW);
+      digitalWrite(GREEN_PIN, HIGH);
+      digitalWrite(BLUE_PIN, LOW);
+    } else {
+      digitalWrite(RED_PIN, LOW);
+      digitalWrite(GREEN_PIN, LOW);
+      digitalWrite(BLUE_PIN, HIGH);
+    }
   }
 
   if (onBreak == true) {
@@ -99,6 +120,9 @@ void stop_pomodoro() {
   state = LOW;
   onPomodoro = false;
   onBreak = false;
+  digitalWrite(RED_PIN, LOW);
+  digitalWrite(GREEN_PIN, LOW);
+  digitalWrite(BLUE_PIN, LOW);
 }
 
 void start_break() {
